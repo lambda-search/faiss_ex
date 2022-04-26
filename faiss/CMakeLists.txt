@@ -187,15 +187,15 @@ endif()
 
 install(TARGETS faiss
   EXPORT faiss-targets
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  RUNTIME DESTINATION bin
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  INCLUDES DESTINATION include
 )
 foreach(header ${FAISS_HEADERS})
   get_filename_component(dir ${header} DIRECTORY )
   install(FILES ${header}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/faiss/${dir}
+    DESTINATION include/faiss/${dir}
   )
 endforeach()
 
@@ -212,9 +212,9 @@ configure_file(${PROJECT_SOURCE_DIR}/cmake/faiss-config.cmake.in
 )
 install(FILES ${PROJECT_BINARY_DIR}/cmake/faiss-config.cmake
   ${PROJECT_BINARY_DIR}/cmake/faiss-config-version.cmake
-  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/faiss
+  DESTINATION lib/cmake/faiss
 )
 
 install(EXPORT faiss-targets
-  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/faiss
+  DESTINATION lib/cmake/faiss
 )
