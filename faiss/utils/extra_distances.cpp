@@ -194,8 +194,7 @@ void knn_extra_metrics_template (
         const float * y,
         size_t nx, size_t ny,
         float_maxheap_array_t * res,
-        const condition_filter &ann_filter_func,
-        void* user_data)
+        const IDSelector &ann_filter)
 {
     size_t k = res->k;
     size_t d = vd.d;
@@ -218,7 +217,7 @@ void knn_extra_metrics_template (
                 float disij = vd (x_i, y_j);
 
                 if (disij < simi[0]) {
-                    if (!ann_filter_func(j, user_data)) {
+                    if (!ann_filter.is_member(j)) {
                         maxheap_replace_top (k, simi, idxi, disij, j);
                     }
                 }
@@ -352,15 +351,14 @@ void knn_extra_metrics (
         size_t d, size_t nx, size_t ny,
         MetricType mt, float metric_arg,
         float_maxheap_array_t * res,
-        const condition_filter &ann_filter_func,
-        void* user_data)
+        const IDSelector &ann_filter)
 {
 
     switch(mt) {
 #define HANDLE_VAR(kw)                                          \
      case METRIC_ ## kw: {                                      \
         VectorDistance ## kw vd = {(size_t)d};                  \
-        knn_extra_metrics_template (vd, x, y, nx, ny, res, ann_filter_func, user_data);     \
+        knn_extra_metrics_template (vd, x, y, nx, ny, res, ann_filter);     \
         break;                                                  \
     }
         HANDLE_VAR(L2);
@@ -372,7 +370,7 @@ void knn_extra_metrics (
 #undef HANDLE_VAR
     case METRIC_Lp: {
         VectorDistanceLp vd = {(size_t)d, metric_arg};
-        knn_extra_metrics_template (vd, x, y, nx, ny, res, ann_filter_func, user_data);
+        knn_extra_metrics_template (vd, x, y, nx, ny, res, ann_filter);
         break;
     }
     default:

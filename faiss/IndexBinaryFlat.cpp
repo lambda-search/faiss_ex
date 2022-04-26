@@ -56,7 +56,7 @@ void IndexBinaryFlat::search(idx_t n, const uint8_t *x, idx_t k,
 }
 
 void IndexBinaryFlat::condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const {}
+                         float *distances, idx_t *labels, const IDSelector &ann_filter) const {}
 
 size_t IndexBinaryFlat::remove_ids(const IDSelector& sel) {
   idx_t j = 0;

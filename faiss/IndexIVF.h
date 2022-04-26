@@ -132,7 +132,7 @@ struct IndexIVF: Index, Level1Quantizer {
      */
     IndexIVF (Index * quantizer, size_t d,
               size_t nlist, size_t code_size,
-              MetricType metric = METRIC_L2, void* user_data = nullptr);
+              MetricType metric = METRIC_L2);
 
     void reset() override;
 
@@ -196,7 +196,7 @@ struct IndexIVF: Index, Level1Quantizer {
             const idx_t *assign, const float *centroid_dis,
             float *distances, idx_t *labels,
             bool store_pairs,
-            const condition_filter &ann_filter_func,
+            const IDSelector &ann_filter,
             const IVFSearchParameters *params=nullptr,
             IndexIVFStats *stats=nullptr
             ) const;
@@ -205,13 +205,13 @@ struct IndexIVF: Index, Level1Quantizer {
     void search (idx_t n, const float *x, idx_t k,
                  float *distances, idx_t *labels) const override;
     void condition_search (idx_t n, const float *x, idx_t k,
-                 float *distances, idx_t *labels, const condition_filter &ann_filter_func) const override;
+                 float *distances, idx_t *labels, const IDSelector &ann_filter) const override;
 
     void range_search (idx_t n, const float* x, float radius,
                        RangeSearchResult* result) const override;
 
     void condition_range_search (idx_t n, const float *x, float radius,
-                               RangeSearchResult *result, const condition_filter &ann_filter_func)  const override;
+                               RangeSearchResult *result, const IDSelector &ann_filter)  const override;
 
     void range_search_preassigned(
             idx_t nx, const float *x, float radius,
@@ -225,7 +225,7 @@ struct IndexIVF: Index, Level1Quantizer {
             idx_t nx, const float *x, float radius,
             const idx_t *keys, const float *coarse_dis,
             RangeSearchResult *result,
-            const condition_filter &ann_filter_func,
+            const IDSelector &ann_filter,
             bool store_pairs=false,
             const IVFSearchParameters *params=nullptr,
             IndexIVFStats *stats=nullptr) const;
@@ -342,7 +342,6 @@ struct RangeQueryResult;
 struct InvertedListScanner {
 
     using idx_t = Index::idx_t;
-    using condition_filter = Index::condition_filter;
 
     /// from now on we handle this query.
     virtual void set_query (const float *query_vector) = 0;
@@ -374,7 +373,7 @@ struct InvertedListScanner {
                                const uint8_t *codes,
                                const idx_t *ids,
                                float *distances, idx_t *labels,
-                               size_t k, const condition_filter &ann_filter_func, void* user_data) const = 0;
+                               size_t k, const IDSelector &ann_filter) const = 0;
 
     /** scan a set of codes, compute distances to current query and
      * update results if distances are below radius
@@ -391,7 +390,7 @@ struct InvertedListScanner {
                                    const idx_t *ids,
                                    float radius,
                                    RangeQueryResult &result,
-                                   const condition_filter &ann_filter_func, void* user_data) const;
+                                   const IDSelector &ann_filter) const;
 
     virtual ~InvertedListScanner () {}
 

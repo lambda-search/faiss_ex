@@ -157,8 +157,7 @@ void exhaustive_inner_product_seq (
         const float * y,
         size_t d, size_t nx, size_t ny,
         ResultHandler &res,
-        const condition_filter &ann_filter_func,
-        void* user_data)
+        const IDSelector &ann_filter)
 {
     size_t check_period = InterruptCallback::get_period_hint (ny * d);
 
@@ -181,7 +180,7 @@ void exhaustive_inner_product_seq (
 
                 for (size_t j = 0; j < ny; j++) {
                     float ip = fvec_inner_product (x_i, y_j, d);
-                    if (!ann_filter_func(j, user_data)) {
+                    if (!ann_filter.is_member(j)) {
                         resi.add_result(ip, j);
                     }
                     y_j += d;
@@ -236,8 +235,7 @@ void exhaustive_L2sqr_seq (
                 const float * y,
                 size_t d, size_t nx, size_t ny,
                 ResultHandler & res,
-                const condition_filter &ann_filter_func,
-                void* user_data)
+                const IDSelector &ann_filter)
 {
 
     size_t check_period = InterruptCallback::get_period_hint (ny * d);
@@ -257,7 +255,7 @@ void exhaustive_L2sqr_seq (
                 resi.begin(i);
                 for (size_t j = 0; j < ny; j++) {
                     float disij = fvec_L2sqr (x_i, y_j, d);
-                    if (!ann_filter_func(j, user_data)) {
+                    if (!ann_filter.is_member(j)) {
                         resi.add_result(disij, j);
                     }
                     y_j += d;
@@ -323,8 +321,7 @@ void exhaustive_inner_product_blas (
         const float * y,
         size_t d, size_t nx, size_t ny,
         ResultHandler & res,
-        const condition_filter &ann_filter_func,
-        void* user_data)
+        const IDSelector &ann_filter)
 {
     // BLAS does not like empty matrices
     if (nx == 0 || ny == 0) return;
@@ -352,7 +349,7 @@ void exhaustive_inner_product_blas (
                         x + i0 * d, &di, &zero,
                         ip_block.get(), &nyi);
             }
-            if (!ann_filter_func(j0, user_data)) {
+            if (!ann_filter.is_member(j0)) {
                 res.add_results(j0, j1, ip_block.get());
             }
         }
@@ -441,8 +438,7 @@ void exhaustive_L2sqr_blas (
         const float * y,
         size_t d, size_t nx, size_t ny,
         ResultHandler & res,
-        const condition_filter &ann_filter_func,
-        void* user_data,
+        const IDSelector &ann_filter,
         const float *y_norms = nullptr)
 {
     // BLAS does not like empty matrices
@@ -499,7 +495,7 @@ void exhaustive_L2sqr_blas (
                     ip_line++;
                 }
             }
-            if (!ann_filter_func(j0, user_data)) {
+            if (!ann_filter.is_member(j0)) {
                 res.add_results(j0, j1, ip_block.get());
             }
         }
@@ -553,24 +549,23 @@ void knn_inner_product (const float * x,
         const float * y,
         size_t d, size_t nx, size_t ny,
         float_minheap_array_t * ha,
-        const condition_filter &ann_filter_func,
-        void* user_data)
+        const IDSelector &ann_filter)
 {
     if (ha->k < distance_compute_min_k_reservoir) {
         HeapResultHandler<CMin<float, int64_t>> res(
             ha->nh, ha->val, ha->ids, ha->k);
         if (nx < distance_compute_blas_threshold) {
-            exhaustive_inner_product_seq (x, y, d, nx, ny, res, ann_filter_func, user_data);
+            exhaustive_inner_product_seq (x, y, d, nx, ny, res, ann_filter);
         } else {
-            exhaustive_inner_product_blas (x, y, d, nx, ny, res, ann_filter_func, user_data);
+            exhaustive_inner_product_blas (x, y, d, nx, ny, res, ann_filter);
         }
     } else {
         ReservoirResultHandler<CMin<float, int64_t>> res(
             ha->nh, ha->val, ha->ids, ha->k);
         if (nx < distance_compute_blas_threshold) {
-            exhaustive_inner_product_seq (x, y, d, nx, ny, res, ann_filter_func, user_data);
+            exhaustive_inner_product_seq (x, y, d, nx, ny, res, ann_filter);
         } else {
-            exhaustive_inner_product_blas (x, y, d, nx, ny, res, ann_filter_func, user_data);
+            exhaustive_inner_product_blas (x, y, d, nx, ny, res, ann_filter);
         }
     }
 }
@@ -608,8 +603,7 @@ void knn_L2sqr (
         const float * y,
         size_t d, size_t nx, size_t ny,
         float_maxheap_array_t * ha, 
-        const condition_filter &ann_filter_func,
-        void* user_data,
+        const IDSelector &ann_filter,
         const float *y_norm2
 ) {
 
@@ -618,17 +612,17 @@ void knn_L2sqr (
             ha->nh, ha->val, ha->ids, ha->k);
 
         if (nx < distance_compute_blas_threshold) {
-            exhaustive_L2sqr_seq (x, y, d, nx, ny, res, ann_filter_func, user_data);
+            exhaustive_L2sqr_seq (x, y, d, nx, ny, res, ann_filter);
         } else {
-            exhaustive_L2sqr_blas (x, y, d, nx, ny, res, ann_filter_func, user_data, y_norm2);
+            exhaustive_L2sqr_blas (x, y, d, nx, ny, res, ann_filter, y_norm2);
         }
     } else {
         ReservoirResultHandler<CMax<float, int64_t>> res(
             ha->nh, ha->val, ha->ids, ha->k);
         if (nx < distance_compute_blas_threshold) {
-            exhaustive_L2sqr_seq (x, y, d, nx, ny, res, ann_filter_func, user_data);
+            exhaustive_L2sqr_seq (x, y, d, nx, ny, res, ann_filter);
         } else {
-            exhaustive_L2sqr_blas (x, y, d, nx, ny, res, ann_filter_func, user_data, y_norm2);
+            exhaustive_L2sqr_blas (x, y, d, nx, ny, res, ann_filter, y_norm2);
         }
     }
 }
@@ -662,14 +656,13 @@ void range_search_L2sqr (
         size_t d, size_t nx, size_t ny,
         float radius,
         RangeSearchResult *res,
-        const condition_filter &ann_filter_func,
-        void* user_data)
+        const IDSelector &ann_filter)
 {
     RangeSearchResultHandler<CMax<float, int64_t>> resh(res, radius);
     if (nx < distance_compute_blas_threshold) {
-        exhaustive_L2sqr_seq (x, y, d, nx, ny, resh, ann_filter_func, user_data);
+        exhaustive_L2sqr_seq (x, y, d, nx, ny, resh, ann_filter);
     } else {
-        exhaustive_L2sqr_blas (x, y, d, nx, ny, resh, ann_filter_func, user_data);
+        exhaustive_L2sqr_blas (x, y, d, nx, ny, resh, ann_filter);
     }
 }
 
@@ -695,15 +688,14 @@ void range_search_inner_product (
         size_t d, size_t nx, size_t ny,
         float radius,
         RangeSearchResult *res,
-        const condition_filter &ann_filter_func,
-        void* user_data)
+        const IDSelector &ann_filter)
 {
 
     RangeSearchResultHandler<CMin<float, int64_t>> resh(res, radius);
     if (nx < distance_compute_blas_threshold) {
-        exhaustive_inner_product_seq (x, y, d, nx, ny, resh, ann_filter_func, user_data);
+        exhaustive_inner_product_seq (x, y, d, nx, ny, resh, ann_filter);
     } else {
-        exhaustive_inner_product_blas (x, y, d, nx, ny, resh, ann_filter_func, user_data);
+        exhaustive_inner_product_blas (x, y, d, nx, ny, resh, ann_filter);
     }
 }
 

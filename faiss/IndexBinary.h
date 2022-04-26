@@ -37,7 +37,6 @@ struct IndexBinary {
   using idx_t = Index::idx_t;    ///< all indices are this type
   using component_t = uint8_t;
   using distance_t = int32_t;
-  typedef std::function<bool(uint64_t, void *)> condition_filter;
 
   int d;                 ///< vector dimension
   int code_size;   ///< number of bytes per vector ( = d / 8 )
@@ -99,7 +98,7 @@ struct IndexBinary {
                       int32_t *distances, idx_t *labels) const = 0;
 
   virtual void condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const = 0;
+                         float *distances, idx_t *labels, const IDSelector &ann_filter) const = 0;
 
   /** Query n vectors of dimension d to the index.
    *

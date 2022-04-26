@@ -263,7 +263,7 @@ void IndexBinaryHash::search(idx_t n, const uint8_t *x, idx_t k,
 }
 
 void IndexBinaryHash::condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const {}
+                         float *distances, idx_t *labels, const IDSelector &ann_filter) const {}
 
 size_t IndexBinaryHash::hashtable_size() const
 {
@@ -481,7 +481,7 @@ void IndexBinaryMultiHash::search(idx_t n, const uint8_t *x, idx_t k,
 }
 
 void IndexBinaryMultiHash::condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const {}
+                         float *distances, idx_t *labels, const IDSelector &ann_filter) const {}
 
 size_t IndexBinaryMultiHash::hashtable_size() const
 {

@@ -35,7 +35,7 @@ void Index::range_search (idx_t , const float *, float,
 }
 
 void Index::condition_range_search (idx_t n, const float *x, float radius,
-                               RangeSearchResult *result, const condition_filter &ann_filter_func) const
+                               RangeSearchResult *result, const IDSelector &ann_filter) const
 {
   FAISS_THROW_MSG ("condition range search not implemented");
 }

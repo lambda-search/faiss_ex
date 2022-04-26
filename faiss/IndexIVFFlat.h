@@ -26,7 +26,7 @@ struct IndexIVFFlat: IndexIVF {
 
     IndexIVFFlat (
             Index * quantizer, size_t d, size_t nlist_,
-            MetricType = METRIC_L2, void* user_data = nullptr);
+            MetricType = METRIC_L2);
 
     /// same as add_with_ids, with precomputed coarse quantizer
     virtual void add_core (idx_t n, const float * x, const int64_t *xids,

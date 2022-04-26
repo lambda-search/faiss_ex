@@ -159,8 +159,8 @@ Index::idx_t Level1Quantizer::decode_listno (const uint8_t *code) const
 
 IndexIVF::IndexIVF (Index * quantizer, size_t d,
                     size_t nlist, size_t code_size,
-                    MetricType metric, void* user_data):
-    Index (d, metric, user_data),
+                    MetricType metric):
+    Index (d, metric),
     Level1Quantizer (quantizer, nlist),
     invlists (new ArrayInvertedLists (nlist, code_size)),
     own_invlists (true),
@@ -347,10 +347,10 @@ void IndexIVF::search (idx_t n, const float *x, idx_t k,
  * interrupt/error handling + collecting stats + min/max collection. The
  * codepath that is used 95% of time is the one for parallel_mode = 0 */
 void IndexIVF::condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const
+                         float *distances, idx_t *labels, const IDSelector &ann_filter) const
 {
     // search function for a subset of queries
-    auto sub_search_func = [this, k, ann_filter_func]
+    auto sub_search_func = [this, k, &ann_filter]
             (idx_t n, const float *x, float *distances, idx_t *labels,
              IndexIVFStats *ivf_stats) {
 
@@ -364,7 +364,7 @@ void IndexIVF::condition_search (idx_t n, const float *x, idx_t k,
         invlists->prefetch_lists (idx.get(), n * nprobe);
 
         condition_search_preassigned (n, x, k, idx.get(), coarse_dis.get(),
-                            distances, labels, false, ann_filter_func, nullptr, ivf_stats);
+                            distances, labels, false, ann_filter, nullptr, ivf_stats);
         double t2 = getmillisecs();
         ivf_stats->quantization_time += t1 - t0;
         ivf_stats->search_time += t2 - t0;
@@ -667,7 +667,7 @@ void IndexIVF::condition_search_preassigned (idx_t n, const float *x, idx_t k,
                                    const float *coarse_dis ,
                                    float *distances, idx_t *labels,
                                    bool store_pairs,
-                                   const condition_filter &ann_filter_func,
+                                   const IDSelector &ann_filter,
                                    const IVFSearchParameters *params,
                                    IndexIVFStats *ivf_stats) const
 {
@@ -772,7 +772,7 @@ void IndexIVF::condition_search_preassigned (idx_t n, const float *x, idx_t k,
                 }
 
                 nheap += scanner->condition_scan_codes (list_size, scodes.get(),
-                                              ids, simi, idxi, k, ann_filter_func, user_data);
+                                              ids, simi, idxi, k, ann_filter);
 
             } catch(const std::exception & e) {
                 std::lock_guard<std::mutex> lock(exception_mutex);
@@ -936,7 +936,7 @@ void IndexIVF::range_search (idx_t nx, const float *x, float radius,
 }
 
 void IndexIVF::condition_range_search (idx_t nx, const float *x, float radius,
-                               RangeSearchResult *result, const condition_filter &ann_filter_func)  const
+                               RangeSearchResult *result, const IDSelector &ann_filter)  const
 {
     std::unique_ptr<idx_t[]> keys (new idx_t[nx * nprobe]);
     std::unique_ptr<float []> coarse_dis (new float[nx * nprobe]);
@@ -949,7 +949,7 @@ void IndexIVF::condition_range_search (idx_t nx, const float *x, float radius,
     invlists->prefetch_lists (keys.get(), nx * nprobe);
 
     condition_range_search_preassigned (nx, x, radius, keys.get (), coarse_dis.get (),
-                              result, ann_filter_func, false, nullptr, &indexIVF_stats);
+                              result, ann_filter, false, nullptr, &indexIVF_stats);
 
     indexIVF_stats.search_time += getmillisecs() - t0;
 }
@@ -1099,7 +1099,7 @@ void IndexIVF::condition_range_search_preassigned (
          idx_t nx, const float *x, float radius,
          const idx_t *keys, const float *coarse_dis,
          RangeSearchResult *result,
-         const condition_filter &ann_filter_func,
+         const IDSelector &ann_filter,
          bool store_pairs,
          const IVFSearchParameters *params,
          IndexIVFStats *stats) const
@@ -1154,7 +1154,7 @@ void IndexIVF::condition_range_search_preassigned (
                 nlistv++;
                 ndis += list_size;
                 scanner->condition_scan_codes_range (list_size, scodes.get(),
-                                        ids.get(), radius, qres, ann_filter_func, user_data);
+                                        ids.get(), radius, qres, ann_filter);
 
             } catch(const std::exception & e) {
                 std::lock_guard<std::mutex> lock(exception_mutex);
@@ -1553,7 +1553,7 @@ void InvertedListScanner::condition_scan_codes_range (size_t n,
                                    const idx_t *ids,
                                    float radius,
                                    RangeQueryResult &result,
-                                   const condition_filter &ann_filter_func, void* user_data) const
+                                   const IDSelector &ann_filter) const
 {
     FAISS_THROW_MSG ("condition_scan_codes_range not implemented");
 }

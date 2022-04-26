@@ -171,7 +171,7 @@ void Index2Layer::search(
 }
 
 void Index2Layer::condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const {}
+                         float *distances, idx_t *labels, const IDSelector &ann_filter) const {}
 
 void Index2Layer::reconstruct_n(idx_t i0, idx_t ni, float* recons) const
 {

@@ -1443,7 +1443,7 @@ struct IVFSQScannerIP: InvertedListScanner {
                                const uint8_t *codes,
                                const idx_t *ids,
                                float *simi, idx_t *idxi,
-                               size_t k, const condition_filter &ann_filter_func, void* user_data) const override
+                               size_t k, const IDSelector &ann_filter) const override
     {
        size_t nup = 0;
 
@@ -1453,7 +1453,7 @@ struct IVFSQScannerIP: InvertedListScanner {
 
             if (accu > simi [0]) {
                 int64_t id = store_pairs ? (list_no << 32 | j) : ids[j];
-                if (!ann_filter_func(id, user_data)) {
+                if (!ann_filter.is_member(id)) {
                     minheap_replace_top (k, simi, idxi, accu, id);
                     nup++;
                 }
@@ -1554,7 +1554,7 @@ struct IVFSQScannerL2: InvertedListScanner {
                                const uint8_t *codes,
                                const idx_t *ids,
                                float *simi, idx_t *idxi,
-                               size_t k, const condition_filter &ann_filter_func, void* user_data) const override
+                               size_t k, const IDSelector &ann_filter) const override
     {
        size_t nup = 0;
         for (size_t j = 0; j < list_size; j++) {
@@ -1563,7 +1563,7 @@ struct IVFSQScannerL2: InvertedListScanner {
 
             if (dis < simi [0]) {
                 int64_t id = store_pairs ? (list_no << 32 | j) : ids[j];
-                if (!ann_filter_func(id, user_data)) {
+                if (!ann_filter.is_member(id)) {
                     maxheap_replace_top (k, simi, idxi, dis, id);
                     nup++;
                 }

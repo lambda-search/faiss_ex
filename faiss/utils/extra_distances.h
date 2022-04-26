@@ -16,15 +16,11 @@
 #include <stdint.h>
 
 #include <faiss/Index.h>
-#include <functional>
-
 #include <faiss/utils/Heap.h>
 
 
 
 namespace faiss {
-
-typedef std::function<bool(uint64_t, void *)> condition_filter;
 
 void pairwise_extra_distances (
                      int64_t d,
@@ -48,8 +44,7 @@ void knn_extra_metrics (
         size_t d, size_t nx, size_t ny,
         MetricType mt, float metric_arg,
         float_maxheap_array_t * res,
-        const condition_filter &ann_filter_func,
-        void* user_data);
+        const IDSelector &ann_filter);
 
 /** get a DistanceComputer that refers to this type of distance and
  *  indexes a flat array of size nb */

@@ -23,7 +23,7 @@ struct IndexFlat: Index {
     /// database vectors, size ntotal * d
     std::vector<float> xb;
 
-    explicit IndexFlat (idx_t d, MetricType metric = METRIC_L2, void* user_data = nullptr);
+    explicit IndexFlat (idx_t d, MetricType metric = METRIC_L2);
 
     void add(idx_t n, const float* x) override;
 
@@ -37,7 +37,7 @@ struct IndexFlat: Index {
         idx_t* labels) const override;
     
     void condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const override;
+                         float *distances, idx_t *labels, const IDSelector &ann_filter) const override;
 
     void range_search(
         idx_t n,
@@ -50,7 +50,7 @@ struct IndexFlat: Index {
         const float* x,
         float radius,
         RangeSearchResult* result,
-        const condition_filter &ann_filter_func) const override;
+        const IDSelector &ann_filter) const override;
 
     void reconstruct(idx_t key, float* recons) const override;
 

@@ -44,7 +44,7 @@ struct IndexBinaryFromFloat : IndexBinary {
               int32_t *distances, idx_t *labels) const override;
 
   void condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const override;
+                         float *distances, idx_t *labels, const IDSelector &ann_filter) const override;
 
   void train(idx_t n, const uint8_t *x) override;
 };

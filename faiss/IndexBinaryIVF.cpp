@@ -136,7 +136,7 @@ void IndexBinaryIVF::search(idx_t n, const uint8_t *x, idx_t k,
 }
 
 void IndexBinaryIVF::condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const {}
+                         float *distances, idx_t *labels, const IDSelector &ann_filter) const {}
 
 void IndexBinaryIVF::reconstruct(idx_t key, uint8_t *recons) const {
     idx_t lo = direct_map.get (key);

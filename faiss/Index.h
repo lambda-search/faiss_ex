@@ -54,7 +54,6 @@ struct Index {
     using idx_t = int64_t;  ///< all indices are this type
     using component_t = float;
     using distance_t = float;
-    typedef std::function<bool(uint64_t, void *)> condition_filter;
 
     int d;                 ///< vector dimension
     idx_t ntotal;          ///< total nb of indexed vectors
@@ -67,16 +66,14 @@ struct Index {
     /// type of metric this index uses for search
     MetricType metric_type;
     float metric_arg;     ///< argument of the metric type
-    void* user_data;
 
-    explicit Index (idx_t d = 0, MetricType metric = METRIC_L2, void* user_data = nullptr):
+    explicit Index (idx_t d = 0, MetricType metric = METRIC_L2):
                     d(d),
                     ntotal(0),
                     verbose(false),
                     is_trained(true),
                     metric_type (metric),
-                    metric_arg(0),
-                    user_data(user_data) {}
+                    metric_arg(0) {}
 
     virtual ~Index ();
 
@@ -119,7 +116,7 @@ struct Index {
                          float *distances, idx_t *labels) const = 0;
 
     virtual void condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const = 0;
+                         float *distances, idx_t *labels, const IDSelector &ann_filter) const = 0;
 
     /** query n vectors of dimension d to the index.
      *
@@ -135,7 +132,7 @@ struct Index {
                                RangeSearchResult *result) const;
 
     virtual void condition_range_search (idx_t n, const float *x, float radius,
-                               RangeSearchResult *result, const condition_filter &ann_filter_func) const;
+                               RangeSearchResult *result, const IDSelector &ann_filter) const;
 
     /** return the indexes of the k vectors closest to the query x.
      *

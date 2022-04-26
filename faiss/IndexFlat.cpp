@@ -20,8 +20,8 @@
 
 namespace faiss {
 
-IndexFlat::IndexFlat (idx_t d, MetricType metric, void* user_data):
-            Index(d, metric, user_data)
+IndexFlat::IndexFlat (idx_t d, MetricType metric):
+            Index(d, metric)
 {
 }
 
@@ -62,23 +62,23 @@ void IndexFlat::search (idx_t n, const float *x, idx_t k,
 }
 
 void IndexFlat::condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const {
+                         float *distances, idx_t *labels, const IDSelector &ann_filter) const {
     // we see the distances and labels as heaps
 
     if (metric_type == METRIC_INNER_PRODUCT) {
         float_minheap_array_t res = {
             size_t(n), size_t(k), labels, distances};
-        knn_inner_product (x, xb.data(), d, n, ntotal, &res, ann_filter_func, user_data);
+        knn_inner_product (x, xb.data(), d, n, ntotal, &res, ann_filter);
     } else if (metric_type == METRIC_L2) {
         float_maxheap_array_t res = {
             size_t(n), size_t(k), labels, distances};
-        knn_L2sqr (x, xb.data(), d, n, ntotal, &res, ann_filter_func, user_data);
+        knn_L2sqr (x, xb.data(), d, n, ntotal, &res, ann_filter);
     } else {
         float_maxheap_array_t res = {
             size_t(n), size_t(k), labels, distances};
         knn_extra_metrics (x, xb.data(), d, n, ntotal,
                            metric_type, metric_arg,
-                           &res, ann_filter_func, user_data);
+                           &res, ann_filter);
     }
 }
 
@@ -99,15 +99,15 @@ void IndexFlat::range_search (idx_t n, const float *x, float radius,
 }
 
 void IndexFlat::condition_range_search (idx_t n, const float *x, float radius,
-                              RangeSearchResult *result, const condition_filter &ann_filter_func) const
+                              RangeSearchResult *result, const IDSelector &ann_filter) const
 {
     switch (metric_type) {
     case METRIC_INNER_PRODUCT:
         range_search_inner_product (x, xb.data(), d, n, ntotal,
-                                    radius, result, ann_filter_func, user_data);
+                                    radius, result, ann_filter);
         break;
     case METRIC_L2:
-        range_search_L2sqr (x, xb.data(), d, n, ntotal, radius, result, ann_filter_func, user_data);
+        range_search_L2sqr (x, xb.data(), d, n, ntotal, radius, result, ann_filter);
         break;
     default:
         FAISS_THROW_MSG("metric type not supported");

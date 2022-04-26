@@ -28,8 +28,8 @@ namespace faiss {
  ******************************************/
 
 IndexIVFFlat::IndexIVFFlat (Index * quantizer,
-                            size_t d, size_t nlist, MetricType metric, void* user_data):
-    IndexIVF (quantizer, d, nlist, sizeof(float) * d, metric, user_data)
+                            size_t d, size_t nlist, MetricType metric):
+    IndexIVF (quantizer, d, nlist, sizeof(float) * d, metric)
 {
     code_size = sizeof(float) * d;
 }
@@ -171,7 +171,7 @@ struct IVFFlatScanner: InvertedListScanner {
                        const uint8_t *codes,
                        const idx_t *ids,
                        float *simi, idx_t *idxi,
-                       size_t k, const condition_filter &ann_filter_func, void* user_data) const override
+                       size_t k, const IDSelector &ann_filter) const override
     {
         const float *list_vecs = (const float*)codes;
         size_t nup = 0;
@@ -181,7 +181,7 @@ struct IVFFlatScanner: InvertedListScanner {
                 fvec_inner_product (xi, yj, d) : fvec_L2sqr (xi, yj, d);
             if (C::cmp (simi[0], dis)) {
                 int64_t id = store_pairs ? lo_build (list_no, j) : ids[j];
-                if (!ann_filter_func(id, user_data)) {
+                if (!ann_filter.is_member(id)) {
                     heap_replace_top<C> (k, simi, idxi, dis, id);
                     nup++;
                 }
@@ -213,7 +213,7 @@ struct IVFFlatScanner: InvertedListScanner {
                            const idx_t *ids,
                            float radius,
                            RangeQueryResult & res,
-                           const condition_filter &ann_filter_func, void* user_data) const override
+                           const IDSelector &ann_filter) const override
     {
         const float *list_vecs = (const float*)codes;
         for (size_t j = 0; j < list_size; j++) {
@@ -222,7 +222,7 @@ struct IVFFlatScanner: InvertedListScanner {
                 fvec_inner_product (xi, yj, d) : fvec_L2sqr (xi, yj, d);
             if (C::cmp (radius, dis)) {
                 int64_t id = store_pairs ? lo_build (list_no, j) : ids[j];
-                if (!ann_filter_func(id, user_data)) {
+                if (!ann_filter.is_member(id)) {
                     res.add (dis, id);
                 }
             }

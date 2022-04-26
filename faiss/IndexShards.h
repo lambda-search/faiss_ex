@@ -21,7 +21,6 @@ struct IndexShardsTemplate : public ThreadedIndex<IndexT> {
   using idx_t = typename IndexT::idx_t;
   using component_t = typename IndexT::component_t;
   using distance_t = typename IndexT::distance_t;
-  using condition_filter = typename IndexT::condition_filter;
 
   /**
    * The dimension that all sub-indices must share will be the dimension of the
@@ -79,7 +78,7 @@ struct IndexShardsTemplate : public ThreadedIndex<IndexT> {
               distance_t* distances, idx_t* labels) const override;
 
   void condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const override;
+                         float *distances, idx_t *labels, const IDSelector &ann_filter) const override;
 
   void train(idx_t n, const component_t* x) override;
 

@@ -52,7 +52,7 @@ struct MockIndex : public faiss::Index {
   }
 
   void condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const override {}
+                         float *distances, idx_t *labels, const faiss::IDSelector &ann_filter) const override {}
 
   void reset() override { }
 
@@ -68,7 +68,6 @@ struct MockIndex : public faiss::Index {
 template <typename IndexT>
 struct MockThreadedIndex : public faiss::ThreadedIndex<IndexT> {
   using idx_t = faiss::Index::idx_t;
-  using condition_filter = faiss::Index::condition_filter;
 
   explicit MockThreadedIndex(bool threaded)
       : faiss::ThreadedIndex<IndexT>(threaded) {
@@ -77,7 +76,7 @@ struct MockThreadedIndex : public faiss::ThreadedIndex<IndexT> {
   void add(idx_t, const float*) override { }
   void search(idx_t, const float*, idx_t, float*, idx_t*) const override {}
   void condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const override {}
+                         float *distances, idx_t *labels, const faiss::IDSelector &ann_filter) const override {}
   void reset() override {}
 };
 

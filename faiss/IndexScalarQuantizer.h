@@ -45,7 +45,7 @@ struct IndexScalarQuantizer: Index {
      */
     IndexScalarQuantizer (int d,
                           ScalarQuantizer::QuantizerType qtype,
-                          MetricType metric = METRIC_L2, void* user_data = nullptr);
+                          MetricType metric = METRIC_L2);
 
     IndexScalarQuantizer ();
 
@@ -61,7 +61,7 @@ struct IndexScalarQuantizer: Index {
         idx_t* labels) const override;
 
     void condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const override;
+                         float *distances, idx_t *labels, const IDSelector &ann_filter) const override;
 
     void reset() override;
 

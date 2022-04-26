@@ -282,7 +282,7 @@ struct IVFScanner: InvertedListScanner {
                                const uint8_t *codes,
                                const idx_t *ids,
                                float *distances, idx_t *labels,
-                               size_t k, const condition_filter &ann_filter_func, void* user_data) const override {}
+                               size_t k, const IDSelector &ann_filter) const override {}
 
     void scan_codes_range (size_t list_size,
                            const uint8_t *codes,

@@ -37,8 +37,8 @@ namespace faiss {
  ******************************************/
 
 IndexIVFPQ::IndexIVFPQ (Index * quantizer, size_t d, size_t nlist,
-                        size_t M, size_t nbits_per_idx, MetricType metric, void* user_data):
-    IndexIVF (quantizer, d, nlist, 0, metric, user_data),
+                        size_t M, size_t nbits_per_idx, MetricType metric):
+    IndexIVF (quantizer, d, nlist, 0, metric),
     pq (d, M, nbits_per_idx)
 {
     FAISS_THROW_IF_NOT (nbits_per_idx <= 8);
@@ -1122,7 +1122,7 @@ struct IVFPQScanner:
                                const uint8_t *codes,
                                const idx_t *ids,
                                float *distances, idx_t *labels,
-                               size_t k, const condition_filter &ann_filter_func, void* user_data) const override {}
+                               size_t k, const IDSelector &ann_filter) const override {}
 
     void scan_codes_range (size_t ncode,
                            const uint8_t *codes,
