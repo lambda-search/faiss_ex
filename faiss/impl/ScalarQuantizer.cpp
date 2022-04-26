@@ -1443,7 +1443,7 @@ struct IVFSQScannerIP: InvertedListScanner {
                                const uint8_t *codes,
                                const idx_t *ids,
                                float *simi, idx_t *idxi,
-                               size_t k, const ANNFilterFunc &ann_filter_func, void* user_data) const override 
+                               size_t k, const condition_filter &ann_filter_func, void* user_data) const override
     {
        size_t nup = 0;
 
@@ -1554,7 +1554,7 @@ struct IVFSQScannerL2: InvertedListScanner {
                                const uint8_t *codes,
                                const idx_t *ids,
                                float *simi, idx_t *idxi,
-                               size_t k, const ANNFilterFunc &ann_filter_func, void* user_data) const override 
+                               size_t k, const condition_filter &ann_filter_func, void* user_data) const override
     {
        size_t nup = 0;
         for (size_t j = 0; j < list_size; j++) {

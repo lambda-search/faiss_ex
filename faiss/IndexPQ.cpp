@@ -302,7 +302,7 @@ void IndexPQ::search (idx_t n, const float *x, idx_t k,
 }
 
 void IndexPQ::condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const ANNFilterFunc &ann_filter_func) const {}
+                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const {}
 
 
 
@@ -1035,7 +1035,7 @@ void MultiIndexQuantizer::search (idx_t n, const float *x, idx_t k,
 }
 
 void MultiIndexQuantizer::condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const ANNFilterFunc &ann_filter_func) const {}
+                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const {}
 
 void MultiIndexQuantizer::reconstruct (idx_t key, float * recons) const
 {

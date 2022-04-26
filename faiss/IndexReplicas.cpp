@@ -161,7 +161,7 @@ IndexReplicasTemplate<IndexT>::search(idx_t n,
 
 template <typename IndexT>
 void IndexReplicasTemplate<IndexT>::condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const ANNFilterFunc &ann_filter_func) const {}
+                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const {}
 
 // FIXME: assumes that nothing is currently running on the sub-indexes, which is
 // true with the normal API, but should use the runOnIndex API instead

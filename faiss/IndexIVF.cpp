@@ -347,7 +347,7 @@ void IndexIVF::search (idx_t n, const float *x, idx_t k,
  * interrupt/error handling + collecting stats + min/max collection. The
  * codepath that is used 95% of time is the one for parallel_mode = 0 */
 void IndexIVF::condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const ANNFilterFunc &ann_filter_func) const
+                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const
 {
     // search function for a subset of queries
     auto sub_search_func = [this, k, ann_filter_func]
@@ -667,7 +667,7 @@ void IndexIVF::condition_search_preassigned (idx_t n, const float *x, idx_t k,
                                    const float *coarse_dis ,
                                    float *distances, idx_t *labels,
                                    bool store_pairs,
-                                   const ANNFilterFunc &ann_filter_func,
+                                   const condition_filter &ann_filter_func,
                                    const IVFSearchParameters *params,
                                    IndexIVFStats *ivf_stats) const
 {
@@ -936,7 +936,7 @@ void IndexIVF::range_search (idx_t nx, const float *x, float radius,
 }
 
 void IndexIVF::condition_range_search (idx_t nx, const float *x, float radius,
-                               RangeSearchResult *result, const ANNFilterFunc &ann_filter_func)  const
+                               RangeSearchResult *result, const condition_filter &ann_filter_func)  const
 {
     std::unique_ptr<idx_t[]> keys (new idx_t[nx * nprobe]);
     std::unique_ptr<float []> coarse_dis (new float[nx * nprobe]);
@@ -1099,7 +1099,7 @@ void IndexIVF::condition_range_search_preassigned (
          idx_t nx, const float *x, float radius,
          const idx_t *keys, const float *coarse_dis,
          RangeSearchResult *result,
-         const ANNFilterFunc &ann_filter_func,
+         const condition_filter &ann_filter_func,
          bool store_pairs,
          const IVFSearchParameters *params,
          IndexIVFStats *stats) const
@@ -1553,7 +1553,7 @@ void InvertedListScanner::condition_scan_codes_range (size_t n,
                                    const idx_t *ids,
                                    float radius,
                                    RangeQueryResult &result,
-                                   const ANNFilterFunc &ann_filter_func, void* user_data) const 
+                                   const condition_filter &ann_filter_func, void* user_data) const
 {
     FAISS_THROW_MSG ("condition_scan_codes_range not implemented");
 }

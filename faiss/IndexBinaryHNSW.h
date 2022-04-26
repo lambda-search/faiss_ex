@@ -48,7 +48,7 @@ struct IndexBinaryHNSW : IndexBinary {
               int32_t *distances, idx_t *labels) const override;
 
   void condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const ANNFilterFunc &ann_filter_func) const override; 
+                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const override;
 
   void reconstruct(idx_t key, uint8_t* recons) const override;
 

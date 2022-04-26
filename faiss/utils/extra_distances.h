@@ -24,7 +24,7 @@
 
 namespace faiss {
 
-typedef std::function<bool(uint64_t, void *)> ANNFilterFunc;
+typedef std::function<bool(uint64_t, void *)> condition_filter;
 
 void pairwise_extra_distances (
                      int64_t d,
@@ -48,7 +48,7 @@ void knn_extra_metrics (
         size_t d, size_t nx, size_t ny,
         MetricType mt, float metric_arg,
         float_maxheap_array_t * res,
-        const ANNFilterFunc &ann_filter_func,
+        const condition_filter &ann_filter_func,
         void* user_data);
 
 /** get a DistanceComputer that refers to this type of distance and

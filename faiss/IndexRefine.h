@@ -47,7 +47,7 @@ struct IndexRefine: Index {
         float* distances, idx_t* labels) const override;
 
     void condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const ANNFilterFunc &ann_filter_func) const override;
+                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const override;
 
     // reconstruct is routed to the refine_index
     void reconstruct (idx_t key, float * recons) const override;

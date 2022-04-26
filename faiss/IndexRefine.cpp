@@ -157,7 +157,7 @@ void IndexRefine::search (
 }
 
 void IndexRefine::condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const ANNFilterFunc &ann_filter_func) const {}
+                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const {}
 
 void IndexRefine::reconstruct (idx_t key, float * recons) const {
     refine_index->reconstruct (key, recons);

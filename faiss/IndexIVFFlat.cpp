@@ -171,7 +171,7 @@ struct IVFFlatScanner: InvertedListScanner {
                        const uint8_t *codes,
                        const idx_t *ids,
                        float *simi, idx_t *idxi,
-                       size_t k, const ANNFilterFunc &ann_filter_func, void* user_data) const override
+                       size_t k, const condition_filter &ann_filter_func, void* user_data) const override
     {
         const float *list_vecs = (const float*)codes;
         size_t nup = 0;
@@ -213,7 +213,7 @@ struct IVFFlatScanner: InvertedListScanner {
                            const idx_t *ids,
                            float radius,
                            RangeQueryResult & res,
-                           const ANNFilterFunc &ann_filter_func, void* user_data) const override
+                           const condition_filter &ann_filter_func, void* user_data) const override
     {
         const float *list_vecs = (const float*)codes;
         for (size_t j = 0; j < list_size; j++) {

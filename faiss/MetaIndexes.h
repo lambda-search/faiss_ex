@@ -24,7 +24,7 @@ struct IndexIDMapTemplate : IndexT {
     using idx_t = typename IndexT::idx_t;
     using component_t = typename IndexT::component_t;
     using distance_t = typename IndexT::distance_t;
-    using ANNFilterFunc = typename IndexT::ANNFilterFunc;
+    using condition_filter = typename IndexT::condition_filter;
 
     IndexT * index;           ///! the sub-index
     bool own_fields;          ///! whether pointers are deleted in destructo
@@ -44,7 +44,7 @@ struct IndexIDMapTemplate : IndexT {
         idx_t* labels) const override;
 
     void condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const ANNFilterFunc &ann_filter_func) const override; 
+                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const override;
 
     void train(idx_t n, const component_t* x) override;
 
@@ -117,7 +117,7 @@ struct IndexSplitVectors: Index {
         idx_t* labels) const override;
 
      void condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const ANNFilterFunc &ann_filter_funcc) const override;  
+                         float *distances, idx_t *labels, const condition_filter &ann_filter_funcc) const override;
 
     void train(idx_t n, const float* x) override;
 

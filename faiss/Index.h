@@ -54,7 +54,7 @@ struct Index {
     using idx_t = int64_t;  ///< all indices are this type
     using component_t = float;
     using distance_t = float;
-    typedef std::function<bool(uint64_t, void *)> ANNFilterFunc;
+    typedef std::function<bool(uint64_t, void *)> condition_filter;
 
     int d;                 ///< vector dimension
     idx_t ntotal;          ///< total nb of indexed vectors
@@ -119,7 +119,7 @@ struct Index {
                          float *distances, idx_t *labels) const = 0;
 
     virtual void condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const ANNFilterFunc &ann_filter_func) const = 0;                     
+                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const = 0;
 
     /** query n vectors of dimension d to the index.
      *
@@ -135,7 +135,7 @@ struct Index {
                                RangeSearchResult *result) const;
 
     virtual void condition_range_search (idx_t n, const float *x, float radius,
-                               RangeSearchResult *result, const ANNFilterFunc &ann_filter_func) const;
+                               RangeSearchResult *result, const condition_filter &ann_filter_func) const;
 
     /** return the indexes of the k vectors closest to the query x.
      *

@@ -1122,7 +1122,7 @@ struct IVFPQScanner:
                                const uint8_t *codes,
                                const idx_t *ids,
                                float *distances, idx_t *labels,
-                               size_t k, const ANNFilterFunc &ann_filter_func, void* user_data) const override {}
+                               size_t k, const condition_filter &ann_filter_func, void* user_data) const override {}
 
     void scan_codes_range (size_t ncode,
                            const uint8_t *codes,

@@ -62,7 +62,7 @@ void IndexFlat::search (idx_t n, const float *x, idx_t k,
 }
 
 void IndexFlat::condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const ANNFilterFunc &ann_filter_func) const {
+                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const {
     // we see the distances and labels as heaps
 
     if (metric_type == METRIC_INNER_PRODUCT) {
@@ -99,7 +99,7 @@ void IndexFlat::range_search (idx_t n, const float *x, float radius,
 }
 
 void IndexFlat::condition_range_search (idx_t n, const float *x, float radius,
-                              RangeSearchResult *result, const ANNFilterFunc &ann_filter_func) const
+                              RangeSearchResult *result, const condition_filter &ann_filter_func) const
 {
     switch (metric_type) {
     case METRIC_INNER_PRODUCT:

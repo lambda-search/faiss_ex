@@ -337,7 +337,7 @@ IndexShardsTemplate<IndexT>::search(idx_t n,
 
 template <typename IndexT>
 void IndexShardsTemplate<IndexT>::condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const ANNFilterFunc &ann_filter_func) const {}
+                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const {}
 
 // explicit instanciations
 template struct IndexShardsTemplate<Index>;

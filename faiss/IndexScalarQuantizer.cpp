@@ -102,7 +102,7 @@ void IndexScalarQuantizer::search(
 }
 
 void IndexScalarQuantizer::condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const ANNFilterFunc &ann_filter_func) const 
+                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const
 {
     FAISS_THROW_IF_NOT (is_trained);
     FAISS_THROW_IF_NOT (metric_type == METRIC_L2 ||

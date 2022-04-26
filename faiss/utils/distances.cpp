@@ -157,7 +157,7 @@ void exhaustive_inner_product_seq (
         const float * y,
         size_t d, size_t nx, size_t ny,
         ResultHandler &res,
-        const ANNFilterFunc &ann_filter_func,
+        const condition_filter &ann_filter_func,
         void* user_data)
 {
     size_t check_period = InterruptCallback::get_period_hint (ny * d);
@@ -236,7 +236,7 @@ void exhaustive_L2sqr_seq (
                 const float * y,
                 size_t d, size_t nx, size_t ny,
                 ResultHandler & res,
-                const ANNFilterFunc &ann_filter_func,
+                const condition_filter &ann_filter_func,
                 void* user_data)
 {
 
@@ -323,7 +323,7 @@ void exhaustive_inner_product_blas (
         const float * y,
         size_t d, size_t nx, size_t ny,
         ResultHandler & res,
-        const ANNFilterFunc &ann_filter_func,
+        const condition_filter &ann_filter_func,
         void* user_data)
 {
     // BLAS does not like empty matrices
@@ -441,7 +441,7 @@ void exhaustive_L2sqr_blas (
         const float * y,
         size_t d, size_t nx, size_t ny,
         ResultHandler & res,
-        const ANNFilterFunc &ann_filter_func,
+        const condition_filter &ann_filter_func,
         void* user_data,
         const float *y_norms = nullptr)
 {
@@ -553,7 +553,7 @@ void knn_inner_product (const float * x,
         const float * y,
         size_t d, size_t nx, size_t ny,
         float_minheap_array_t * ha,
-        const ANNFilterFunc &ann_filter_func,
+        const condition_filter &ann_filter_func,
         void* user_data)
 {
     if (ha->k < distance_compute_min_k_reservoir) {
@@ -608,7 +608,7 @@ void knn_L2sqr (
         const float * y,
         size_t d, size_t nx, size_t ny,
         float_maxheap_array_t * ha, 
-        const ANNFilterFunc &ann_filter_func,
+        const condition_filter &ann_filter_func,
         void* user_data,
         const float *y_norm2
 ) {
@@ -662,7 +662,7 @@ void range_search_L2sqr (
         size_t d, size_t nx, size_t ny,
         float radius,
         RangeSearchResult *res,
-        const ANNFilterFunc &ann_filter_func,
+        const condition_filter &ann_filter_func,
         void* user_data)
 {
     RangeSearchResultHandler<CMax<float, int64_t>> resh(res, radius);
@@ -695,7 +695,7 @@ void range_search_inner_product (
         size_t d, size_t nx, size_t ny,
         float radius,
         RangeSearchResult *res,
-        const ANNFilterFunc &ann_filter_func,
+        const condition_filter &ann_filter_func,
         void* user_data)
 {
 

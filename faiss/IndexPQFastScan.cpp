@@ -201,7 +201,7 @@ void IndexPQFastScan::search(
 }
 
 void IndexPQFastScan::condition_search (idx_t n, const float *x, idx_t k,
-                         float *distances, idx_t *labels, const ANNFilterFunc &ann_filter_func) const {}
+                         float *distances, idx_t *labels, const condition_filter &ann_filter_func) const {}
 
 template<bool is_max>
 void IndexPQFastScan::search_dispatch_implem(

@@ -164,7 +164,7 @@ FAISS_API extern int distance_compute_blas_database_bs;
 // rather than a heap
 FAISS_API extern int distance_compute_min_k_reservoir;
 
-typedef std::function<bool(uint64_t, void *)> ANNFilterFunc;
+typedef std::function<bool(uint64_t, void *)> condition_filter;
 
 /** Return the k nearest neighors of each of the nx vectors x among the ny
  *  vector y, w.r.t to max inner product
@@ -191,7 +191,7 @@ void knn_inner_product (
         const float * y,
         size_t d, size_t nx, size_t ny,
         float_minheap_array_t * res,
-        const ANNFilterFunc &ann_filter_func,
+        const condition_filter &ann_filter_func,
         void* user_data);
 
 /** Same as knn_inner_product, for the L2 distance
@@ -212,7 +212,7 @@ void knn_L2sqr (
         const float * y,
         size_t d, size_t nx, size_t ny,
         float_maxheap_array_t * res,
-        const ANNFilterFunc &ann_filter_func,
+        const condition_filter &ann_filter_func,
         void* user_data, 
         const float *y_norm2 = nullptr);
 
@@ -272,7 +272,7 @@ void range_search_L2sqr (
         size_t d, size_t nx, size_t ny,
         float radius,
         RangeSearchResult *result,
-        const ANNFilterFunc &ann_filter_func,
+        const condition_filter &ann_filter_func,
         void* user_data);
 
 /// same as range_search_L2sqr for the inner product similarity
@@ -290,7 +290,7 @@ void range_search_inner_product (
         size_t d, size_t nx, size_t ny,
         float radius,
         RangeSearchResult *result,
-        const ANNFilterFunc &ann_filter_func,
+        const condition_filter &ann_filter_func,
         void* user_data);
 
 
